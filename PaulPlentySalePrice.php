@@ -30,5 +30,4 @@ class PaulPlentySalePrice extends Plugin
         $container->setParameter('paul_plenty_sale_price.plugin_dir', $this->getPath());
         parent::build($container);
     }
-
 }

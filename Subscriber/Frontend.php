@@ -27,24 +27,48 @@ class Frontend implements SubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            'Enlight_Controller_Action_PostDispatch_Frontend_Detail' => 'onPostDispatchDetail'
+            'Shopware_Modules_Basket_getPriceForUpdateArticle_FilterPrice' => 'onFilterPrice',
+            'Enlight_Controller_Action_PreDispatch_Frontend_Detail' => 'onPreDispatchDetail',
         ];
     }
 
-    /**
-     * Hauptfunktion
-     *
-     * @param \Enlight_Event_EventArgs $args
-     */
-    public function onPostDispatchDetail(\Enlight_Event_EventArgs $args)
+
+    public function onPreDispatchDetail(\Enlight_Event_EventArgs $args)
     {
+
         /** @var $controller \Enlight_Controller_Action */
         $controller = $args->getSubject();
         $view = $controller->View();
-        $view->addTemplateDir($this->container->getParameter('paul_plenty_sale_price.plugin_dir') . '/Resources/Views');
-        $config = $this->container->get('shopware.plugin.config_reader')->getByPluginName('PaulPlentySalePrice');
+        $view->addTemplateDir($this->container->getParameter('paul_raiting_overview.plugin_dir') . '/Resources/Views');
+        $config = $this->container->get('shopware.plugin.config_reader')->getByPluginName('PaulRaitingOverview');
 
         // Lese Plugineinstellungen
         $active = $config['active'];
+
+    }
+
+    /**
+     * @param \Enlight_Event_EventArgs $args
+     */
+    public function onFilterPrice(\Enlight_Event_EventArgs $args)
+    {
+
+        if ($this->checkIfSaleIsValid()) {
+            $price = $args->getReturn();
+            $price['price'] = $price['price'] * 1;
+            $args->setReturn($price);
+        }
+    }
+
+    private function checkIfSaleIsValid()
+    {
+
+        $bekommtRabatt = false;
+
+        if (true) {
+            $bekommtRabatt = true;
+        }
+
+        return $bekommtRabatt;
     }
 }
